@@ -1,3 +1,4 @@
+
 import os
 
 # from dotenv import load_dotenv
@@ -58,22 +59,6 @@ DOCUMENT_MAP = {
 # Default Instructor Model
 EMBEDDING_MODEL_NAME = "hkunlp/instructor-large"  # Uses 1.5 GB of VRAM (High Accuracy with lower VRAM usage)
 
-####
-#### OTHER EMBEDDING MODEL OPTIONS
-####
-
-# EMBEDDING_MODEL_NAME = "hkunlp/instructor-xl" # Uses 5 GB of VRAM (Most Accurate of all models)
-# EMBEDDING_MODEL_NAME = "intfloat/e5-large-v2" # Uses 1.5 GB of VRAM (A little less accurate than instructor-large)
-# EMBEDDING_MODEL_NAME = "intfloat/e5-base-v2" # Uses 0.5 GB of VRAM (A good model for lower VRAM GPUs)
-# EMBEDDING_MODEL_NAME = "all-MiniLM-L6-v2" # Uses 0.2 GB of VRAM (Less accurate but fastest - only requires 150mb of vram)
-
-####
-#### MULTILINGUAL EMBEDDING MODELS
-####
-
-# EMBEDDING_MODEL_NAME = "intfloat/multilingual-e5-large" # Uses 2.5 GB of VRAM
-# EMBEDDING_MODEL_NAME = "intfloat/multilingual-e5-base" # Uses 1.2 GB of VRAM
-
 
 #### SELECT AN OPEN SOURCE LLM (LARGE LANGUAGE MODEL)
 # Select the Model ID and model_basename
@@ -115,7 +100,7 @@ MODEL_BASENAME = "llama-2-7b-chat.Q4_K_M.gguf"
 # MODEL_BASENAME = None
 # MODEL_ID = "TheBloke/vicuna-7B-1.1-HF"
 # MODEL_BASENAME = None
-# MODEL_ID = "TheBloke/Wizard-Vicuna-7B-Uncensored-HF"
+# MODEL_ID = "TheBloke/Wizard-Vicuna-7B-Unsored-HF"
 # MODEL_ID = "TheBloke/guanaco-7B-HF"
 # MODEL_ID = 'NousResearch/Nous-Hermes-13b' # Requires ~ 23GB VRAM. Using STransformers
 # alongside will 100% create OOM on 24GB cards.

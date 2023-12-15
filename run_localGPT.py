@@ -2,7 +2,7 @@ import os
 import logging
 import click
 import torch
-import utils
+# import utils
 from langchain.chains import RetrievalQA
 from langchain.embeddings import HuggingFaceInstructEmbeddings
 from langchain.llms import HuggingFacePipeline
@@ -21,10 +21,10 @@ from transformers import (
 )
 
 from load_models import (
-    load_quantized_model_awq,
+    # load_quantized_model_awq,
     load_quantized_model_gguf_ggml,
-    load_quantized_model_qptq,
-    load_full_model,
+    # load_quantized_model_qptq,
+    # load_full_model,
 )
 
 from constants import (
@@ -63,14 +63,14 @@ def load_model(device_type, model_id, model_basename=None, LOGGING=logging):
         if ".gguf" in model_basename.lower():
             llm = load_quantized_model_gguf_ggml(model_id, model_basename, device_type, LOGGING)
             return llm
-        elif ".ggml" in model_basename.lower():
-            model, tokenizer = load_quantized_model_gguf_ggml(model_id, model_basename, device_type, LOGGING)
-        elif ".awq" in model_basename.lower():
-            model, tokenizer = load_quantized_model_awq(model_id, LOGGING)
-        else:
-            model, tokenizer = load_quantized_model_qptq(model_id, model_basename, device_type, LOGGING)
-    else:
-        model, tokenizer = load_full_model(model_id, model_basename, device_type, LOGGING)
+        # elif ".ggml" in model_basename.lower():
+        #     model, tokenizer = load_quantized_model_gguf_ggml(model_id, model_basename, device_type, LOGGING)
+        # elif ".awq" in model_basename.lower():
+        #     model, tokenizer = load_quantized_model_awq(model_id, LOGGING)
+        # else:
+        #     model, tokenizer = load_quantized_model_qptq(model_id, model_basename, device_type, LOGGING)
+    # else:
+    #     model, tokenizer = load_full_model(model_id, model_basename, device_type, LOGGING)
 
     # Load configuration from the model to avoid warnings
     generation_config = GenerationConfig.from_pretrained(model_id)
@@ -164,34 +164,6 @@ def retrieval_qa_pipline(device_type, use_history, promptTemplate_type="llama"):
 # chose device typ to run on as well as to show source documents.
 @click.command()
 @click.option(
-    "--device_type",
-    default="cuda" if torch.cuda.is_available() else "cpu",
-    type=click.Choice(
-        [
-            "cpu",
-            "cuda",
-            "ipu",
-            "xpu",
-            "mkldnn",
-            "opengl",
-            "opencl",
-            "ideep",
-            "hip",
-            "ve",
-            "fpga",
-            "ort",
-            "xla",
-            "lazy",
-            "vulkan",
-            "mps",
-            "meta",
-            "hpu",
-            "mtia",
-        ],
-    ),
-    help="Device to run on. (Default is cuda)",
-)
-@click.option(
     "--show_sources",
     "-s",
     is_flag=True,
@@ -203,21 +175,7 @@ def retrieval_qa_pipline(device_type, use_history, promptTemplate_type="llama"):
     is_flag=True,
     help="Use history (Default is False)",
 )
-@click.option(
-    "--model_type",
-    default="llama",
-    type=click.Choice(
-        ["llama", "mistral", "non_llama"],
-    ),
-    help="model type, llama, mistral or non_llama",
-)
-@click.option(
-    "--save_qa",
-    is_flag=True,
-    help="whether to save Q&A pairs to a CSV file (Default is False)",
-)
-
-def main(device_type, show_sources, use_history, model_type, save_qa):
+def main(show_sources, use_history, model_type):
     """
     Implements the main information retrieval task for a localGPT.
 
@@ -238,7 +196,7 @@ def main(device_type, show_sources, use_history, model_type, save_qa):
 
     """
 
-    logging.info(f"Running on: {device_type}")
+    logging.info(f"Running on: {'cpu'}")
     logging.info(f"Display Source Documents set to: {show_sources}")
     logging.info(f"Use history set to: {use_history}")
 
@@ -246,7 +204,7 @@ def main(device_type, show_sources, use_history, model_type, save_qa):
     if not os.path.exists(MODELS_PATH):
         os.mkdir(MODELS_PATH)
 
-    qa = retrieval_qa_pipline(device_type, use_history, promptTemplate_type=model_type)
+    qa = retrieval_qa_pipline("cpu", use_history, promptTemplate_type=model_type)
     # Interactive questions and answers
     while True:
         query = input("\nEnter a query: ")
@@ -269,10 +227,9 @@ def main(device_type, show_sources, use_history, model_type, save_qa):
                 print("\n> " + document.metadata["source"] + ":")
                 print(document.page_content)
             print("----------------------------------SOURCE DOCUMENTS---------------------------")
-        
+
         # Log the Q&A to CSV only if save_qa is True
-        if save_qa:
-            utils.log_to_csv(query, answer)
+
 
 
 if __name__ == "__main__":

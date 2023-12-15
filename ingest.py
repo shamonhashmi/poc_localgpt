@@ -21,22 +21,26 @@ def file_log(logentry):
    print(logentry + "\n")
 
 def load_single_document(file_path: str) -> Document:
-    # Loads a single document from a file path
+
     file_extension = os.path.splitext(file_path)[1]
     loader_class = DOCUMENT_MAP.get(file_extension)
     if loader_class:
         loader = loader_class(file_path)
+        # print(loader)
     else:
         raise ValueError("Document type is undefined")
     return loader.load()[0]
 
 def load_documents(source_dir: str) -> List[Document]:
-    # Loads all documents from the source documents directory
+
     all_files = os.listdir(source_dir)
     docs = []
     for file_path in all_files:
         file_extension = os.path.splitext(file_path)[1]
         source_file_path = os.path.join(source_dir, file_path)
+        print(source_dir)
+        print(file_path)
+        print(source_file_path)
         if file_extension in DOCUMENT_MAP.keys():
             docs.append(load_single_document(source_file_path))
     return docs
@@ -68,7 +72,7 @@ def main():
         persist_directory=PERSIST_DIRECTORY,
         client_settings=CHROMA_SETTINGS,
     )
-   
+
 
 if __name__ == "__main__":
     main()
